@@ -38,6 +38,26 @@ go install github.com/3dyuval/gopass-json/cmd/gopass-json@latest
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Contributing
+
+Contributions are welcome. To propose a change:
+
+1. Fork the repo
+2. Create a branch (`git checkout -b feature/my-change`)
+3. Commit your changes (`git commit -m 'add my change'`)
+4. Push the branch (`git push origin feature/my-change`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Acknowledgments
+
+- [gopass-jsonapi](https://github.com/gopasspw/gopass-jsonapi) — this project is built on top of the gopass JSON API and uses its Go library to access the vault directly
+- [gopass](https://github.com/gopasspw/gopass) — the underlying password manager
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- MARKDOWN LINKS -->
 [stars-shield]: https://img.shields.io/github/stars/3dyuval/gopass-json.svg?style=for-the-badge
 [stars-url]: https://github.com/3dyuval/gopass-json/stargazers
