@@ -64,7 +64,7 @@ func withFakeVault(vault fakeVault) func() {
 func TestGetEntry(t *testing.T) {
 	defer withFakeVault(fakeVault{
 		"infra/cloud": {
-			"password":  "s3cret",
+			"secret":    "s3cret",
 			"host":      "example.com",
 			"api-token": "tok_abc123",
 		},
@@ -75,7 +75,7 @@ func TestGetEntry(t *testing.T) {
 
 	var got map[string]string
 	require.NoError(t, json.Unmarshal(data, &got))
-	assert.Equal(t, "s3cret", got["password"])
+	assert.Equal(t, "s3cret", got["secret"])
 	assert.Equal(t, "example.com", got["host"])
 	assert.Equal(t, "tok_abc123", got["api-token"])
 }
