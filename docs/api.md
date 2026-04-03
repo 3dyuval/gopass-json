@@ -1,8 +1,8 @@
-# gopass-json — JSON-native vault CLI
+# gopass-json JSON-native vault CLI
 
 ## Goal
 
-A CLI that treats the gopass vault as a collection of JSON routes — replacing fragile `grep | awk` field parsing with typed JSON queries and `jq` filters.
+A CLI that treats the gopass vault as a collection of JSON routes replacing fragile `grep | awk` field parsing with typed JSON queries and `jq` filters.
 
 ## Motivation
 
@@ -31,9 +31,9 @@ gopass-json find infra                             # search by name pattern
 
 ## Design
 
-- **Files are routes** — vault entry paths map directly to CLI arguments
-- **jq is the query language** — any valid jq filter works as the second argument to `get`
-- **No grep/awk** — all field access is typed JSON
+- **Files are routes** vault entry paths map directly to CLI arguments
+- **jq is the query language** any valid jq filter works as the second argument to `get`
+- **No grep/awk** all field access is typed JSON
 
 ## Request types (internal)
 

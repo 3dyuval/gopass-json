@@ -18,8 +18,8 @@ gopass-json find cloud
 
 ## Prerequisites
 
-- [gopass](https://github.com/gopasspw/gopass) — the vault backend
-- [jq](https://jqlang.github.io/jq/) — for field filtering
+- [gopass](https://github.com/gopasspw/gopass) the vault backend
+- [jq](https://jqlang.github.io/jq/) for field filtering
 
 ## Install
 
@@ -32,9 +32,9 @@ go install github.com/3dyuval/gopass-json/cmd/gopass-json@latest
 | Command | Description |
 |---|---|
 | `gopass-json get <entry>` | All fields as a JSON object |
-| `gopass-json get <entry> <jq-filter>` | Field value via any jq expression — `get cloud/infra .host` |
-| `gopass-json list [pattern]` | JSON array of all entry paths — pipeable to `jq '.[]'` |
-| `gopass-json find <query>` | JSON array of matching paths — `find cloud \| jq '.[0]'` |
+| `gopass-json get <entry> <jq-filter>` | Field value via any jq expression `get cloud/infra .host` |
+| `gopass-json list [pattern]` | JSON array of all entry paths pipeable to `jq '.[]'` |
+| `gopass-json find <query>` | JSON array of matching paths `find cloud \| jq '.[0]'` |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -52,8 +52,8 @@ Contributions are welcome. To propose a change:
 
 ## Acknowledgments
 
-- [gopass-jsonapi](https://github.com/gopasspw/gopass-jsonapi) — this project is built on top of the gopass JSON API and uses its Go library to access the vault directly
-- [gopass](https://github.com/gopasspw/gopass) — the underlying password manager
+- [gopass-jsonapi](https://github.com/gopasspw/gopass-jsonapi) this project is built on top of the gopass JSON API and uses its Go library to access the vault directly
+- [gopass](https://github.com/gopasspw/gopass) the underlying password manager
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
