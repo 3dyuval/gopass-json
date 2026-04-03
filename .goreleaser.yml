@@ -8,8 +8,7 @@ before:
 builds:
   - id: gopass-json
     binary: gopass-json
-    main: .
-    dir: ./cmd/gopass-json
+    main: ./cmd/gopass-json/main.go
     flags:
       - -trimpath
     env:
