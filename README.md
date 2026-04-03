@@ -1,5 +1,6 @@
 <div id="readme-top"></div>
 
+[![Version][version-shield]][version-url]
 [![Stars][stars-shield]][stars-url]
 [![Forks][forks-shield]][forks-url]
 [![Issues][issues-shield]][issues-url]
@@ -20,8 +21,8 @@ See [docs/api.md](docs/api.md) for full documentation.
 
 ## Prerequisites
 
-- [gopass](https://github.com/gopasspw/gopass) the vault backend
-- [jq](https://jqlang.github.io/jq/) for field filtering
+- [gopass](https://github.com/gopasspw/gopass) for password vault
+- [jq](https://jqlang.github.io/jq/) for querying (Optional)
 
 ## Install
 
@@ -61,6 +62,8 @@ Contributions are welcome. To propose a change:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS -->
+[version-shield]: https://img.shields.io/badge/version-v0.1.0-blue?style=for-the-badge
+[version-url]: https://github.com/3dyuval/gopass-json/releases/tag/v0.1.0
 [stars-shield]: https://img.shields.io/github/stars/3dyuval/gopass-json.svg?style=for-the-badge
 [stars-url]: https://github.com/3dyuval/gopass-json/stargazers
 [forks-shield]: https://img.shields.io/github/forks/3dyuval/gopass-json.svg?style=for-the-badge
