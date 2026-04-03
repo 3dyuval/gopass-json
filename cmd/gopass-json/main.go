@@ -101,12 +101,16 @@ func queryEntries(ctx context.Context, query string) ([]byte, error) {
 	return json.Marshal(matches)
 }
 
-// jqPrint pipes data through jq with the given filter.
+// jqPrint pipes data through jq. When a filter is given, output is raw (no quotes).
+// When printing the full object, pretty-print JSON is used.
 func jqPrint(data []byte, filter string) error {
+	args := []string{}
 	if filter == "" {
-		filter = "."
+		args = append(args, ".")
+	} else {
+		args = append(args, "-r", filter)
 	}
-	cmd := exec.Command("jq", filter)
+	cmd := exec.Command("jq", args...)
 	cmd.Stdin = bytes.NewReader(data)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

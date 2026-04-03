@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"os"
+	"os/exec"
 	"strings"
 	"testing"
 
@@ -175,6 +178,44 @@ func TestFind(t *testing.T) {
 	assert.Len(t, entries, 2)
 	assert.Contains(t, entries, "infra/cloud")
 	assert.Contains(t, entries, "work/cloud")
+}
+
+// --- jqPrint output tests ---
+
+// captureJqPrint runs jqPrint and returns stdout as a trimmed string.
+func captureJqPrint(t *testing.T, data []byte, filter string) string {
+	t.Helper()
+	if _, err := exec.LookPath("jq"); err != nil {
+		t.Skip("jq not installed")
+	}
+	r, w, err := os.Pipe()
+	require.NoError(t, err)
+	orig := os.Stdout
+	os.Stdout = w
+	err = jqPrint(data, filter)
+	w.Close()
+	os.Stdout = orig
+	require.NoError(t, err)
+	var buf bytes.Buffer
+	_, _ = buf.ReadFrom(r)
+	return strings.TrimSpace(buf.String())
+}
+
+func TestJqPrintWithFilterIsRaw(t *testing.T) {
+	// with a filter, strings should have no surrounding quotes
+	data := []byte(`{"host":"example.com","port":"443"}`)
+	out := captureJqPrint(t, data, ".host")
+	assert.Equal(t, "example.com", out)
+}
+
+func TestJqPrintNoFilterIsPrettyJSON(t *testing.T) {
+	// without a filter, output should be valid pretty-printed JSON (quoted)
+	data := []byte(`{"host":"example.com"}`)
+	out := captureJqPrint(t, data, "")
+	assert.Contains(t, out, `"host"`)
+	assert.Contains(t, out, `"example.com"`)
+	var parsed map[string]string
+	require.NoError(t, json.Unmarshal([]byte(out), &parsed))
 }
 
 func TestFindCaseInsensitive(t *testing.T) {
