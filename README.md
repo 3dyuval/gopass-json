@@ -16,6 +16,8 @@ gopass-json list
 gopass-json find cloud
 ```
 
+See [docs/api.md](docs/api.md) for full documentation.
+
 ## Prerequisites
 
 - [gopass](https://github.com/gopasspw/gopass) the vault backend
