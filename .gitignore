@@ -15,5 +15,6 @@
 # vendor/
 
 gopass-jsonapi*
+gopass-json
 dist/
 .vscode/

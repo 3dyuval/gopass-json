@@ -1,99 +1,46 @@
-# goreleaser.yml
-# Release automation
-#
-# Build customization
-project_name: gopass-jsonapi
+project_name: gopass-json
 version: 2
 
 before:
   hooks:
-    - make clean
-    - make completion
     - go mod download
 
 builds:
-  - id: gopass-jsonapi
-    binary: gopass-jsonapi
+  - id: gopass-json
+    binary: gopass-json
+    main: ./cmd/gopass-json
     flags:
       - -trimpath
-      - -tags=netgo
     env:
       - CGO_ENABLED=0
-    asmflags:
-      - all=-trimpath={{.Env.GOPATH}}
-    gcflags:
-      - all=-trimpath={{.Env.GOPATH}}
     ldflags: |
-      -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.CommitDate}} -extldflags '-static'
+      -s -w -X main.version={{.Version}}
     goos:
-      - darwin
-      - freebsd
       - linux
-      - openbsd
+      - darwin
       - windows
     goarch:
       - amd64
-      - arm
       - arm64
-    goarm:
-      - 6
-      - 7
     mod_timestamp: '{{ .CommitTimestamp }}'
+
 archives:
-  - id: gopass-jsonapi
-    name_template: "{{.Binary}}-{{.Version}}-{{.Os}}-{{.Arch}}{{ if .Arm }}v{{.Arm }}{{ end }}"
+  - id: gopass-json
+    name_template: "{{.Binary}}-{{.Version}}-{{.Os}}-{{.Arch}}"
     formats: ['tar.gz']
     format_overrides:
       - goos: windows
         formats: ['zip']
     files:
-      - CHANGELOG.md
       - LICENSE
-      - README.md
+      - docs/api.md
 
-release:
-  github:
-    owner: gopasspw
-    name: gopass-jsonapi
-  draft: false
-  prerelease: auto
-
-nfpms:
-  - id: gopass-jsonapi
-    vendor: Gopass Authors
-    homepage: "https://www.gopass.pw"
-    maintainer: "Gopass Authors <gopass@gopass.pw>"
-    description: |-
-      gopass password manager - full featured CLI replacement for pass, designed for teams.
-      gopass is a simple but powerful password manager for your terminal. It is a
-      Pass implementation in Go that can be used as a drop in replacement.
-       .
-      Every secret lives inside of a gpg (or: age) encrypted textfile. These secrets
-      can be organized into meaninful hierachies and are by default versioned using
-      git.
-       .
-      This package contains the JSON API for the gopassbridge browser extension.
-    license: MIT
-    formats:
-      - deb
-      - rpm
-    dependencies:
-      - git
-      - gnupg2
-    recommends:
-      - rng-tools
-source:
-  enabled: true
-  name_template: "{{.ProjectName}}-{{.Version}}"
-  
 checksum:
   name_template: "{{.ProjectName}}_{{.Version}}_SHA256SUMS"
 
-milestones:
-  -
-    repo:
-      owner: gopasspw
-      name: gopass-jsonapi
-    close: true
-    fail_on_error: false
-    name_template: "{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+release:
+  github:
+    owner: 3dyuval
+    name: gopass-json
+  draft: false
+  prerelease: auto

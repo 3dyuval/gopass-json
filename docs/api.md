@@ -1,125 +1,56 @@
-# API Overview
+# gopass-json — JSON-native vault CLI
 
-The API follows the specification for native messaging from [Mozilla](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging) and [Chrome](https://developer.chrome.com/apps/nativeMessaging).
-Each JSON-UTF8 encoded message is prefixed with a 32-bit integer specifying the length of the message.
-Communication is performed via stdin/stdout.
+## Goal
 
-**WARNING**: This API **MUST NOT** be exposed over the network to remote hosts.
-**No authentication is performed** and the only safe way is to communicate via stdin/stdout as you do in your terminal.
+A CLI that treats the gopass vault as a collection of JSON routes — replacing fragile `grep | awk` field parsing with typed JSON queries and `jq` filters.
 
-## Request Types
+## Motivation
 
-### `query`
+Scripts that access multi-field gopass entries typically look like:
 
-#### Request
-
-```json
-{
-  "type": "query",
-  "query": "secret"
-}
+```bash
+_f() { gopass show infra/cloud | grep "^$1:" | awk '{print $2}'; }
+HOST=$(_f host)
+TOKEN=$(_f api-token)
 ```
 
-#### Response
+This breaks on values containing spaces, colons, or special characters, and is fragile across gopass versions and entry formats.
 
-```json
-[
-    "somewhere/mysecret/loginname",
-    "somewhere/else/secretsauce"
-]
+`gopass-json` exposes the vault as structured JSON so callers use `jq` instead.
+
+## Usage
+
+```bash
+gopass-json get infra/cloud                        # full JSON object of all fields
+gopass-json get infra/cloud .host                  # single field via jq filter
+gopass-json get infra/cloud '.["api-token"]'       # field with special chars
+gopass-json list                                   # ["infra/cloud", "infra/wifi", ...]
+gopass-json list infra                             # filtered list
+gopass-json find cloud                             # search by name pattern
 ```
 
-### `queryHost`
+## Design
 
-Similar to `query` but cuts hostnames and subdomains from the left side until the response to the query is non-empty. Stops if only the [public suffix](https://publicsuffix.org/) is remaining.
+- **Files are routes** — vault entry paths map directly to CLI arguments
+- **jq is the query language** — any valid jq filter works as the second argument to `get`
+- **No grep/awk** — all field access is typed JSON
 
-#### Request
+## Request types (internal)
 
-```json
-{
-  "type": "queryHost",
-  "host": "some.domain.example.com"
-}
+| Type | Purpose |
+|---|---|
+| `getData` | Returns all fields as a `map[string]string` for an entry |
+| `query` | Search entries by name pattern |
+
+## Structure
+
 ```
-
-#### Response:
-
-```json
-[
-    "somewhere/domain.example.com/loginname",
-    "somewhere/other.domain.example.com"
-]
-```
-
-### `getLogin`
-
-#### Request
-
-```json
-{
-   "type": "getLogin",
-   "entry": "somewhere/else/secretsauce"
-}
-```
-
-#### Response:
-
-```json
-{
-   "username": "hugo",
-   "password": "thepassword"
-}
-```
-
-### `getData`
-
-#### Request
-
-```json
-{
-   "type": "getData",
-   "entry": "somewhere/else/secretsauce"
-}
-```
-
-#### Response:
-
-```json
-{
-   "current_totp": "576548"
-}
-```
-
-### `create`
-
-#### Request
-
-```json
-{
-   "type": "create",
-   "login": "myusername",
-   "password": "",
-   "length": 12,
-   "generate": true,
-   "use_symbols": true
-}
-```
-
-#### Response:
-
-```json
-{
-   "username": "myusername",
-   "password": "5^dX9j1\"b5^q"
-}
-```
-
-## Error Response
-
-If an uncaught error occurs, the stringified error message is send back as the response:
-
-```json
-{
-  "error": "Some error occurred with fancy message"
-}
+cmd/gopass-json/
+├── main.go          # cobra root, gopass store transport
+├── get.go           # get <entry> [jq-filter] → JSON
+├── list.go          # list [pattern] → JSON array
+├── find.go          # find <query> → JSON array
+└── main_test.go     # transport-level tests with fake vault
+docs/
+└── api.md           # this file
 ```
