@@ -9,7 +9,7 @@ A CLI that treats the gopass vault as a collection of JSON routes — replacing 
 Scripts that access multi-field gopass entries typically look like:
 
 ```bash
-_f() { gopass show infra/cloud | grep "^$1:" | awk '{print $2}'; }
+_f() { gopass show cloud/infra | grep "^$1:" | awk '{print $2}'; }
 HOST=$(_f host)
 TOKEN=$(_f api-token)
 ```
@@ -21,12 +21,12 @@ This breaks on values containing spaces, colons, or special characters, and is f
 ## Usage
 
 ```bash
-gopass-json get infra/cloud                        # full JSON object of all fields
-gopass-json get infra/cloud .host                  # single field via jq filter
-gopass-json get infra/cloud '.["api-token"]'       # field with special chars
-gopass-json list                                   # ["infra/cloud", "infra/wifi", ...]
-gopass-json list infra                             # filtered list
-gopass-json find cloud                             # search by name pattern
+gopass-json get cloud/infra                        # full JSON object of all fields
+gopass-json get cloud/infra .host                  # single field via jq filter
+gopass-json get cloud/infra '.["api-token"]'       # field with special chars
+gopass-json list                                   # ["cloud/infra", "cloud/wifi", ...]
+gopass-json list cloud                            # filtered list
+gopass-json find infra                             # search by name pattern
 ```
 
 ## Design

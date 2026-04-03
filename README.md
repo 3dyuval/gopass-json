@@ -10,8 +10,8 @@
 Treat your gopass vault as JSON routes. Query any secret field with `jq`.
 
 ```bash
-gopass-json get infra/cloud .host
-gopass-json get infra/cloud '.["api-token"]'
+gopass-json get cloud/infra .host
+gopass-json get cloud/infra '.["api-token"]'
 gopass-json list
 gopass-json find cloud
 ```
