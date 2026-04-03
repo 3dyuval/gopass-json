@@ -80,6 +80,23 @@ func TestGetEntry(t *testing.T) {
 	assert.Equal(t, "tok_abc123", got["api-token"])
 }
 
+func TestGetDefaultsToSecret(t *testing.T) {
+	// no filter → .secret raw output
+	data := []byte(`{"secret":"mysecret","host":"example.com"}`)
+	out := captureJqPrint(t, data, ".secret")
+	assert.Equal(t, "mysecret", out)
+}
+
+func TestGetDotReturnsFullObject(t *testing.T) {
+	// "." filter → full pretty JSON
+	data := []byte(`{"secret":"mysecret","host":"example.com"}`)
+	out := captureJqPrint(t, data, "")
+	var parsed map[string]string
+	require.NoError(t, json.Unmarshal([]byte(out), &parsed))
+	assert.Equal(t, "mysecret", parsed["secret"])
+	assert.Equal(t, "example.com", parsed["host"])
+}
+
 func TestGetEntryNotFound(t *testing.T) {
 	defer withFakeVault(fakeVault{})()
 
