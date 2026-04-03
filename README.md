@@ -16,6 +16,11 @@ gopass-json list
 gopass-json find cloud
 ```
 
+## Prerequisites
+
+- [gopass](https://github.com/gopasspw/gopass) — the vault backend
+- [jq](https://jqlang.github.io/jq/) — for field filtering
+
 ## Install
 
 ```bash
