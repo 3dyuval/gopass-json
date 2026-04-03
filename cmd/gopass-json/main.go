@@ -75,6 +75,7 @@ func getData(ctx context.Context, entry string) ([]byte, error) {
 		return nil, fmt.Errorf("entry not found: %s", entry)
 	}
 	result := make(map[string]string)
+	result["password"] = sec.Password()
 	for _, k := range sec.Keys() {
 		if v, ok := sec.Get(k); ok {
 			result[k] = v
