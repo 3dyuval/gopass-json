@@ -32,9 +32,9 @@ go install github.com/3dyuval/gopass-json/cmd/gopass-json@latest
 | Command | Description |
 |---|---|
 | `gopass-json get <entry>` | All fields as a JSON object |
-| `gopass-json get <entry> <jq-filter>` | Field value via any jq expression |
-| `gopass-json list [pattern]` | All entry paths, optionally filtered |
-| `gopass-json find <query>` | Entry paths matching a search term |
+| `gopass-json get <entry> <jq-filter>` | Field value via any jq expression — `get cloud/infra .host` |
+| `gopass-json list [pattern]` | JSON array of all entry paths — pipeable to `jq '.[]'` |
+| `gopass-json find <query>` | JSON array of matching paths — `find cloud \| jq '.[0]'` |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
