@@ -237,6 +237,96 @@ func TestJqPrintNoFilterIsPrettyJSON(t *testing.T) {
 	require.NoError(t, json.Unmarshal([]byte(out), &parsed))
 }
 
+// --- merge command tests ---
+
+func TestMergeMultipleEntries(t *testing.T) {
+	defer withFakeVault(fakeVault{
+		"api/gitlab.com": {"secret": "glpat-xxx", "host": "gitlab.com"},
+		"api/tavily":     {"secret": "tvly-yyy"},
+		"api/vuetify":    {"secret": "vui-zzz"},
+	})()
+
+	data, err := mergeEntries([]string{"api/gitlab.com", "api/tavily", "api/vuetify"})
+	require.NoError(t, err)
+
+	var got map[string]map[string]string
+	require.NoError(t, json.Unmarshal(data, &got))
+
+	assert.Equal(t, "glpat-xxx", got["gitlab.com"]["secret"])
+	assert.Equal(t, "gitlab.com", got["gitlab.com"]["host"])
+	assert.Equal(t, "tvly-yyy", got["tavily"]["secret"])
+	assert.Equal(t, "vui-zzz", got["vuetify"]["secret"])
+}
+
+func TestMergeKeyedByBasename(t *testing.T) {
+	defer withFakeVault(fakeVault{
+		"a/b/c/token": {"secret": "abc"},
+	})()
+
+	data, err := mergeEntries([]string{"a/b/c/token"})
+	require.NoError(t, err)
+
+	var got map[string]map[string]string
+	require.NoError(t, json.Unmarshal(data, &got))
+
+	assert.Contains(t, got, "token")
+	assert.NotContains(t, got, "a/b/c/token")
+}
+
+func TestMergeMissingEntryReturnsEmpty(t *testing.T) {
+	defer withFakeVault(fakeVault{
+		"api/tavily": {"secret": "tvly-yyy"},
+	})()
+
+	data, err := mergeEntries([]string{"api/tavily", "api/missing"})
+	require.NoError(t, err)
+
+	var got map[string]map[string]string
+	require.NoError(t, json.Unmarshal(data, &got))
+
+	assert.Equal(t, "tvly-yyy", got["tavily"]["secret"])
+	assert.Empty(t, got["missing"])
+}
+
+func TestMergeSingleEntry(t *testing.T) {
+	defer withFakeVault(fakeVault{
+		"api/github.com": {"secret": "ghp-abc", "host": "github.com"},
+	})()
+
+	data, err := mergeEntries([]string{"api/github.com"})
+	require.NoError(t, err)
+
+	var got map[string]map[string]string
+	require.NoError(t, json.Unmarshal(data, &got))
+
+	assert.Len(t, got, 1)
+	assert.Equal(t, "ghp-abc", got["github.com"]["secret"])
+}
+
+func TestMergeOutputIsValidJSON(t *testing.T) {
+	defer withFakeVault(fakeVault{
+		"api/gitlab.com": {"secret": "glpat-xxx"},
+		"api/tavily":     {"secret": "tvly-yyy"},
+	})()
+
+	data, err := mergeEntries([]string{"api/gitlab.com", "api/tavily"})
+	require.NoError(t, err)
+	assert.True(t, json.Valid(data))
+}
+
+func TestMergeJqOutput(t *testing.T) {
+	defer withFakeVault(fakeVault{
+		"api/gitlab.com": {"secret": "glpat-xxx"},
+		"api/tavily":     {"secret": "tvly-yyy"},
+	})()
+
+	data, err := mergeEntries([]string{"api/gitlab.com", "api/tavily"})
+	require.NoError(t, err)
+
+	out := captureJqPrint(t, data, ".tavily.secret")
+	assert.Equal(t, "tvly-yyy", out)
+}
+
 func TestFindCaseInsensitive(t *testing.T) {
 	defer withFakeVault(fakeVault{
 		"infra/CLOUD": {"host": "example.com"},
