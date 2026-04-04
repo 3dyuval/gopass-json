@@ -2,11 +2,25 @@ CURRENT := $(shell grep 'const version' cmd/gopass-json/main.go | grep -oE '[0-9
 MAJOR   := $(word 1, $(subst ., ,$(CURRENT)))
 MINOR   := $(word 2, $(subst ., ,$(CURRENT)))
 PATCH   := $(word 3, $(subst ., ,$(CURRENT)))
-NEXT    := $(MAJOR).$(MINOR).$(shell echo $$(($(PATCH)+1)))
 
-.PHONY: patch
+NEXT_PATCH := $(MAJOR).$(MINOR).$(shell echo $$(($(PATCH)+1)))
+NEXT_MINOR := $(MAJOR).$(shell echo $$(($(MINOR)+1))).0
+NEXT_MAJOR := $(shell echo $$(($(MAJOR)+1))).0.0
+
+.PHONY: bump patch minor major
+
+bump: patch
 
 patch:
+	@$(MAKE) _bump NEXT=$(NEXT_PATCH)
+
+minor:
+	@$(MAKE) _bump NEXT=$(NEXT_MINOR)
+
+major:
+	@$(MAKE) _bump NEXT=$(NEXT_MAJOR)
+
+_bump:
 	@echo "bumping $(CURRENT) → $(NEXT)"
 	sed -i 's/const version = "$(CURRENT)"/const version = "$(NEXT)"/' cmd/gopass-json/main.go
 	sed -i 's/version-v$(CURRENT)-blue/version-v$(NEXT)-blue/' README.md
