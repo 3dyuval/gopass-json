@@ -64,8 +64,8 @@ Contributions are welcome. To propose a change:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS -->
-[version-shield]: https://img.shields.io/badge/version-v0.1.2-blue?style=for-the-badge
-[version-url]: https://github.com/3dyuval/gopass-json/releases/tag/v0.1.2
+[version-shield]: https://img.shields.io/badge/version-v0.1.3-blue?style=for-the-badge
+[version-url]: https://github.com/3dyuval/gopass-json/releases/tag/v0.1.3
 [stars-shield]: https://img.shields.io/github/stars/3dyuval/gopass-json.svg?style=for-the-badge
 [stars-url]: https://github.com/3dyuval/gopass-json/stargazers
 [forks-shield]: https://img.shields.io/github/forks/3dyuval/gopass-json.svg?style=for-the-badge
