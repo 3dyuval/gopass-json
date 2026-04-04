@@ -52,5 +52,6 @@ cmd/gopass-json/
 ├── find.go          # find <query> → JSON array
 └── main_test.go     # transport-level tests with fake vault
 docs/
-└── api.md           # this file
+├── api.md           # this file
+└── uses.md          # use cases and patterns
 ```
