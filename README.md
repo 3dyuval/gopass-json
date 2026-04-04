@@ -18,6 +18,7 @@ gopass-json find cloud
 ```
 
 See [docs/api.md](docs/api.md) for full documentation.
+See [docs/uses.md](docs/uses.md) for use cases and patterns.
 
 ## Prerequisites
 
@@ -38,6 +39,7 @@ go install github.com/3dyuval/gopass-json/cmd/gopass-json@latest
 | `gopass-json get <entry> <jq-filter>` | Field value via any jq expression `get cloud/infra .host` |
 | `gopass-json list [pattern]` | JSON array of all entry paths pipeable to `jq '.[]'` |
 | `gopass-json find <query>` | JSON array of matching paths `find cloud \| jq '.[0]'` |
+| `gopass-json merge <entry> [entry...]` | Multiple entries merged into one JSON object keyed by basename |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

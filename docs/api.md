@@ -31,9 +31,11 @@ gopass-json find infra                             # search by name pattern
 
 ## Design
 
-- **Files are routes** vault entry paths map directly to CLI arguments
-- **jq is the query language** any valid jq filter works as the second argument to `get`
-- **No grep/awk** all field access is typed JSON
+**Files are routes** vault entry paths map directly to CLI arguments
+
+**jq is the query language** any valid jq filter works as the second argument to `get`
+
+**No grep/awk** all field access is typed JSON
 
 ## Request types (internal)
 

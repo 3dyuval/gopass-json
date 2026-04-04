@@ -2,18 +2,13 @@
 
 ## Poor man's Vault
 
-gopass + gopass-json gives you a locally-operated secret store with structured
-JSON access — without running a server, managing leases, or paying for
-infrastructure. The pattern covers most of what developer tooling actually needs
-from Vault:
-
 | Vault feature | gopass equivalent |
 |---|---|
 | Structured secrets (KV v2) | Multi-field gopass entries, read via `gopass-json get path .` |
-| Multiple secrets in one call | `gopass-json merge path1 path2 ...` → merged JSON object |
-| Secret schemas / enforcement | [gopass templates](https://github.com/gopasspw/gopass/blob/master/docs/commands/templates.md) — enforce field structure at write time |
-| Access from CI/CD scripts | `gopass-json get ci/deploy .token` — one line, no grep/awk |
-| Baked-in secrets for deploy | chezmoi templates with `secretJSON` — resolved at apply time, never at runtime |
+| Multiple secrets in one call | `gopass-json merge path1 path2 ...` returns merged JSON object |
+| Secret schemas / enforcement | [gopass templates](https://github.com/gopasspw/gopass/blob/master/docs/commands/templates.md) enforce field structure at write time |
+| Access from CI/CD scripts | `gopass-json get ci/deploy .token` one line, no grep/awk |
+| Baked-in secrets for deploy | chezmoi templates with `secretJSON` resolved at apply time, never at runtime |
 
 ### Single-call secret resolution
 
@@ -46,11 +41,11 @@ export TAVILY_API_KEY={{ index $env "TAVILY_API_KEY" }}
 ```
 
 `secretJSON` is cached per unique args set across the entire `chezmoi apply`
-run — gopass-json spawns once regardless of how many templates reference the
+run, gopass-json spawns once regardless of how many templates reference the
 same entry.
 
 ### What it doesn't replace
 
-- Dynamic secret generation (Vault PKI, database credentials with TTL)
-- Multi-user / team secret sharing with RBAC (use gopass teams or a real Vault)
-- Audit logs with per-token access trails
+* Secrets that expire: database credentials with TTL, PKI certificates, or anything Vault generates on demand
+* Teams that share secrets with access controls: use gopass teams or a real Vault for that
+* Compliance needs: no per-token audit trail exists here
